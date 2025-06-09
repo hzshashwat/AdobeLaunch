@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="style.css">
   <!-- Google Analytics – paste your snippet here -->
 </head>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QVSPDR7CXH"></script>
 <script>
@@ -22,8 +23,12 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-QVSPDR7CXH');
+  /*  ▼ add cookie_flags  */
+  gtag('config', 'G-QVSPDR7CXH', {
+    cookie_flags: 'SameSite=None;Secure'
+  });
 </script>
+
 
 <body>
   <!-- ▸▸ Navbar ◂◂ -->

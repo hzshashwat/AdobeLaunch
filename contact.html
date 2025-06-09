@@ -5,15 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Contact Us | CarbonCraft</title>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QVSPDR7CXH"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-QVSPDR7CXH');
-  </script>
-
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,6 +56,20 @@
     .toast.show{opacity:1;pointer-events:auto;transform:translateY(0)}
   </style>
 </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QVSPDR7CXH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  /*  ▼ add cookie_flags  */
+  gtag('config', 'G-QVSPDR7CXH', {
+    cookie_flags: 'SameSite=None;Secure'
+  });
+</script>
+  
 <body>
   <!-- Navbar -->
   <header class="navbar">
