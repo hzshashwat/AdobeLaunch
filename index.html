@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CarbonCraft | F1 Model Cars</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Analytics – paste your snippet here -->
+</head>
+<body>
+  <!-- ▸▸ Navbar ◂◂ -->
+  <header class="navbar">
+    <div class="brand">CarbonCraft</div>
+    <nav>
+      <a href="about.html"     class="nav-link">About&nbsp;Us</a>
+      <a href="contact.html"   class="nav-link">Contact&nbsp;Us</a>
+      <a href="#shop"          class="nav-link">Shop</a>
+      <a href="#cart"          class="nav-link cart-link">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-count" class="badge">0</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- ▸▸ Hero Banner ◂◂ -->
+  <section id="banner" class="banner">
+    <div class="banner-content">
+      <h1 class="headline">Feel&nbsp;the&nbsp;Speed.</h1>
+      <p class="tagline">Premium Formula-1 scale models for true enthusiasts.</p>
+      <a href="#shop" class="btn primary banner-btn">Shop&nbsp;Now</a>
+    </div>
+  </section>
+
+  <!-- ▸▸ Main (Shop & Cart) ◂◂ -->
+  <main>
+    <section id="shop" class="section">
+      <h2 class="section-title">Shop</h2>
+      <div id="product-grid" class="product-grid"></div>
+    </section>
+
+    <section id="cart" class="section hidden">
+      <h2 class="section-title">Your Cart</h2>
+      <div id="cart-items" class="cart-items"></div>
+      <div id="cart-footer" class="cart-footer hidden">
+        <div class="total">Total: <span id="cart-total">₹0</span></div>
+        <button id="checkout-btn" class="btn primary">Checkout</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ▸▸ Product Modal ◂◂ -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close">&times;</button>
+
+      <div class="modal-gallery">
+        <img id="modal-img" src="" alt="Product image">
+        <div id="carousel-dots" class="carousel-dots"></div>
+      </div>
+
+      <div class="modal-info">
+        <h3 id="modal-title"></h3>
+        <p id="modal-desc"></p>
+        <div id="modal-price" class="price"></div>
+        <button id="modal-add-btn" class="btn primary">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>

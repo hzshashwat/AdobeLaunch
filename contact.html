@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact Us | CarbonCraft</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer"/>
+
+  <!-- Shared styles -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* contact-page specifics */
+    .contact-hero{
+      position:relative;min-height:45vh;display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden
+    }
+    .contact-hero::before{
+      content:'';position:absolute;inset:0;
+      background:url('https://images.unsplash.com/photo-1534854638093-bada1813ca19?auto=format&fit=crop&w=1600&q=80')
+                center/cover no-repeat;filter:brightness(.4)
+    }
+    .contact-hero h1{position:relative;z-index:1;font-size:3rem;font-weight:700}
+    @media(min-width:700px){.contact-hero h1{font-size:3.4rem}}
+
+    .contact-card{
+      background:var(--surface);border-radius:var(--radius);padding:2rem;max-width:600px;margin:auto;
+      box-shadow:0 6px 16px rgba(0,0,0,.5)
+    }
+    .contact-card h2{margin-bottom:1.4rem;font-size:1.8rem;text-align:center}
+    .form-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.2rem}
+    .form-group label{font-weight:500}
+    .form-group input,.form-group textarea,.form-group select{
+      padding:.8rem 1rem;border:none;border-radius:var(--radius);background:#2a2a2a;color:var(--text);
+      font-family:inherit;font-size:1rem
+    }
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:2px solid var(--accent)}
+    textarea{resize:vertical;min-height:120px}
+    .contact-card .btn{width:100%;margin-top:.4rem}
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="brand">CarbonCraft</div>
+    <nav>
+      <a href="about.html"     class="nav-link">About&nbsp;Us</a>
+      <a href="contact.html"   class="nav-link active">Contact&nbsp;Us</a>
+      <a href="index.html#shop" class="nav-link">Shop</a>
+      <a href="index.html#cart" class="nav-link cart-link">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="contact-hero">
+    <h1>Let’s&nbsp;Talk</h1>
+  </section>
+
+  <!-- Form -->
+  <section class="section">
+    <div class="contact-card">
+      <h2>We’d love your feedback</h2>
+      <form>
+        <div class="form-group">
+          <label for="name">Name *</label>
+          <input id="name" type="text" placeholder="Your full name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input id="email" type="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input id="age" type="number" min="1" max="110" placeholder="Your age">
+        </div>
+
+        <div class="form-group">
+          <label for="rating">Overall Rating</label>
+          <select id="rating">
+            <option value="" hidden>Select…</option>
+            <option value="5">★★★★★ – Outstanding</option>
+            <option value="4">★★★★ – Great</option>
+            <option value="3">★★★ – Good</option>
+            <option value="2">★★ – Fair</option>
+            <option value="1">★ – Poor</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="purchases">Number of CarbonCraft purchases</label>
+          <input id="purchases" type="number" min="0" placeholder="e.g. 3">
+        </div>
+
+        <div class="form-group">
+          <label for="feedback">Feedback *</label>
+          <textarea id="feedback" placeholder="Tell us what’s on your mind" required></textarea>
+        </div>
+
+        <button type="submit" class="btn primary">Send&nbsp;Message</button>
+      </form>
+    </div>
+  </section>
+</body>
+</html>
