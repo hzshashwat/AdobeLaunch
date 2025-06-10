@@ -1,38 +1,46 @@
-/* contact.js  – handles the Contact Us form & GA tracking */
+/* contact.js – handles the Contact Us form, pushes an event for GTM/GA4 */
 document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('contactForm');
+  const form  = document.getElementById('contactForm');
   const toast = document.getElementById('contactToast');
 
   form.addEventListener('submit', e => {
-    e.preventDefault();                        // ← remove when posting to a server
+    e.preventDefault();            // ← remove when you post to a backend
 
-    /* ---- collect values ---- */
-    const data = {
+    /* -------- collect values -------- */
+    const payload = {
       name:       form.name.value.trim(),
       email:      form.email.value.trim(),
-      age:        form.age.value || null,
-      rating:     form.rating.value || null,
-      purchases:  form.purchases.value || 0,
+      age:        form.age.value || null,      // number (string for now)
+      rating:     form.rating.value || null,   // 1-5
+      purchases:  +form.purchases.value || 0,  // number
       feedback:   form.feedback.value.trim()
     };
 
-    /* ---- send GA event ---- */
-    /*  Make sure gtag() is defined (your gtag snippet is loaded in <head>) */
+    /* -------- send to GTM -------- */
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({
+      event:            'contact_form_submit',
+      contact_name:     payload.name,
+      contact_email:    payload.email,
+      contact_age:      payload.age,
+      contact_rating:   payload.rating,
+      contact_purchases:payload.purchases,
+      contact_feedback: payload.feedback     // only if you really need it
+    });
+
+    /* -------- OPTIONAL: direct gtag() path --------
     if (typeof gtag === 'function') {
       gtag('event', 'contact_form_submit', {
-        event_category: 'engagement',
-        event_label:    'Contact Form',
-        value:          data.rating || 0,             // numeric parameter GA4 likes
-        age:            data.age,
-        purchases:      data.purchases
-        /* You can add more custom parameters in GA4 if you wish */
+        age:       payload.age,
+        rating:    payload.rating,
+        purchases: payload.purchases
       });
     }
+    ------------------------------------------------ */
 
-    /* ---- simple toast confirmation ---- */
+    /* -------- UI niceties -------- */
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 3000);
-
     form.reset();
   });
 });
