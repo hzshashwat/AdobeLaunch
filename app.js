@@ -4,33 +4,59 @@ const products = [
     id: 'sf24-16',
     name: 'Bburago 1/18 Ferrari SF-24 #16',
     price: 14500,
-    desc: 'Formula-1 Ferrari SF-24 (Charles Leclerc) die-cast 1:18.',
+    desc: 'Formula 1 Car Model of 2024 Ferrari SF24 Charles Leclerc (with Plex Case), 1:18 Scale, metal/plastic/rubber build with display base.',
     images: [
       'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/12/bburago-sf24-ferrari-charles-leclerc-1.webp?fit=1000%2C1000&ssl=1',
-      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/12/bburago-sf24-ferrari-charles-leclerc-2.webp?fit=1000%2C1000&ssl=1'
+      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/12/bburago-sf24-ferrari-charles-leclerc-2.webp?fit=1600%2C1600&ssl=1',
+      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/12/bburago-sf24-ferrari-charles-leclerc-3.webp?fit=1600%2C1600&ssl=1'
     ]
   },
   {
-    id: 'sf24-55',
-    name: 'Bburago 1/18 Ferrari SF-24 #55',
-    price: 14500,
-    desc: 'Formula-1 Ferrari SF-24 (Carlos Sainz) die-cast 1:18.',
+    id: 'mcl38-81',
+    name: 'Limited Edition 1/8 McLaren MCL38 #81 – Monaco GP',
+    price: 43550,
+    desc: '1:8 Scale Limited Edition McLaren MCL38 Oscar Piastri Monaco GP Special. 1 of 99 made. Expertly engineered with Senna tribute livery.',
     images: [
-      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/12/bburago-sf24-ferrari-charles-leclerc-1.webp?fit=1000%2C1000&ssl=1',
-      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/12/bburago-sf24-ferrari-charles-leclerc-2.webp?fit=1000%2C1000&ssl=1'
+      'https://www.f1authentics.com/cdn/shop/files/MCL38_Monaco_OP_unbrand_side_4000x2677_crop_center_jpg.webp?v=1733412532&width=1000',
+      'https://www.f1authentics.com/cdn/shop/files/MCL38_Monaco_OP_unbrand_front_4000x2677_crop_center_jpg.webp?v=1733412531&width=500',
+      'https://www.f1authentics.com/cdn/shop/files/MCL38_Monaco_OP_unbrand_overhead_4000x2677_crop_center_jpg.webp?v=1733412531&width=500'
     ]
   },
   {
-    id: 'rb19-1',
-    name: 'Minichamps 1/18 Red Bull RB19 #1',
-    price: 14999,
-    desc: 'Oracle Red Bull Racing RB19 (Max Verstappen) die-cast 1:18.',
+    id: 'rb18-1',
+    name: 'Red Bull 1/18 RB18 #1 Max Verstappen',
+    price: 23000,
+    desc: 'Red Bull Racing RB18 (Max Verstappen) 1:18 Die-cast Model with free rolling wheels and licensed realistic design.',
     images: [
-      'https://images.unsplash.com/photo-1558981033-ffe230b5f0cc?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1558981403-ef13db88ad12?auto=format&fit=crop&w=1000&q=80'
+      'https://krazycaterpillar.com/cdn/shop/files/Bburago-Red-Bull-2023-F1-_1-Max-Verstappen-RB19-1-18-Die-Cast-Scale-Model_1_1800x1800.jpg?v=1739447811',
+      'https://krazycaterpillar.com/cdn/shop/files/Bburago-Red-Bull-2023-F1-_1-Max-Verstappen-RB19-1-18-Die-Cast-Scale-Model_2_1800x1800.jpg?v=1739447811',
+      'https://krazycaterpillar.com/cdn/shop/files/Bburago-Red-Bull-2023-F1-_1-Max-Verstappen-RB19-1-18-Die-Cast-Scale-Model_3_1800x1800.jpg?v=1739447810'
+    ]
+  },
+  {
+    id: 'w14-44',
+    name: 'Mercedes-AMG F1 W14 #44 Lewis Hamilton 1/24',
+    price: 9500,
+    desc: '1:24 Mercedes W14 Lewis Hamilton model with pilot figure. Authentic proportions and livery. Length: 22.5cm. Includes driver.',
+    images: [
+      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/11/bburago-mercedes-amg-f1-lewis-hamilton-1.webp?fit=1000%2C1000&ssl=1',
+      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/11/bburago-mercedes-amg-f1-lewis-hamilton-4.webp?fit=1000%2C1000&ssl=1',
+      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/11/bburago-mercedes-amg-f1-lewis-hamilton-3.webp?fit=1080%2C1080&ssl=1'
+    ]
+  },
+  {
+    id: 'lego-w14',
+    name: 'LEGO Technic Mercedes-AMG F1 W14',
+    price: 19999,
+    desc: 'LEGO Technic 42171 set for adults to build a Mercedes F1 W14. Includes steering, working pistons, differential & DRS wing.',
+    images: [
+      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/06/L42171-1.webp?fit=1000%2C1000&ssl=1',
+      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/06/L42171-2.webp?fit=1000%2C1000&ssl=1',
+      'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/06/L42171-3.webp?fit=1000%2C1000&ssl=1'
     ]
   }
 ];
+
 
 /* ───────── Elements ───────── */
 const productGrid   = document.getElementById('product-grid');
