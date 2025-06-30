@@ -218,7 +218,27 @@ cartItemsEl.addEventListener('click', e => {
 
 /* Home-page tab switcher (Shop ↔ Cart) */
 document.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', () => {
+  link.addEventListener('click', (event) => {
+    // Prevent default navigation if it's an internal hash link for smooth scrolling
+    // If it's a hash link, prevent default and let the smooth scroll handle it.
+    // If it's a regular page link (e.g., about.html), do not prevent default,
+    // as we want the browser to navigate.
+    const href = link.getAttribute('href');
+    const isHashLink = href && href.startsWith('#');
+
+    if (isHashLink) {
+      event.preventDefault(); // Only prevent default for hash links
+    }
+    
+    // Push a dataLayer event for navigation link clicks
+    if (window.dataLayer) {
+      window.dataLayer.push({
+        event: 'nav_link_click',
+        link_text: link.textContent.trim(),
+        link_url: link.href
+      });
+    }
+
     if (!document.querySelector('main')) return; // ignore on about/contact
     document.querySelectorAll('main .section').forEach(s => s.classList.add('hidden'));
     (link.classList.contains('cart-link') ? document.getElementById('cart') : document.getElementById('shop'))

@@ -43,4 +43,24 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => toast.classList.remove('show'), 3000);
     form.reset();
   });
+
+  // Add dataLayer push for navigation links in contact.html as well
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', (event) => {
+      const href = link.getAttribute('href');
+      const isHashLink = href && href.startsWith('#');
+
+      if (isHashLink) {
+        event.preventDefault(); 
+      }
+
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'nav_link_click',
+          link_text: link.textContent.trim(),
+          link_url: link.href
+        });
+      }
+    });
+  });
 });
