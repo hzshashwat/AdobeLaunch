@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-N4CK39HV');</script>
+<!-- End Google Tag Manager -->
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Confirmed | CarbonCraft</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QVSPDR7CXH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  /*  ▼ add cookie_flags  */
+  gtag('config', 'G-QVSPDR7CXH', {
+    cookie_flags: 'SameSite=None;Secure'
+  });
+</script>
+
+
+<body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N4CK39HV"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <!-- ▸▸ Navbar ◂◂ -->
+  <header class="navbar">
+    <a href="index.html" class="brand">CarbonCraft</a>
+    <nav>
+      <a href="shop.html"      class="nav-link">Shop</a>
+      <a href="about.html"     class="nav-link">About&nbsp;Us</a>
+      <a href="contact.html"   class="nav-link">Contact&nbsp;Us</a>
+      <a href="index.html#cart" class="nav-link cart-link">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-count" class="badge">0</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- ▸▸ Success Content ◂◂ -->
+  <section class="checkout-success">
+    <div class="success-content">
+      <div class="success-icon">
+        <div class="checkmark-circle">
+          <i class="fa-solid fa-check"></i>
+        </div>
+      </div>
+      
+      <h1 class="success-title">Thank&nbsp;You!</h1>
+      <p class="success-message">Your order has been successfully placed.</p>
+      
+      <div class="order-info">
+        <p class="order-number">Order #<span id="order-number">CC2025-0001</span></p>
+        <p class="order-email">A confirmation email will be sent to your registered email address.</p>
+      </div>
+      
+      <div class="success-actions">
+        <a href="shop.html" class="btn primary">Continue Shopping</a>
+        <a href="index.html" class="btn secondary">Back to Home</a>
+      </div>
+      
+      <div class="racing-flag">
+        <i class="fa-solid fa-flag-checkered"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- Confetti Animation -->
+  <div class="confetti-container"></div>
+
+  <script>
+    // Generate random order number
+    const orderNum = 'CC' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+    document.getElementById('order-number').textContent = orderNum;
+
+    // Clear cart after successful checkout
+    localStorage.removeItem('carboncraft_cart');
+    
+    // Update cart count
+    document.getElementById('cart-count').textContent = '0';
+
+    // Simple confetti effect
+    function createConfetti() {
+      const container = document.querySelector('.confetti-container');
+      const colors = ['#e10600', '#fff', '#888', '#1a1a1a'];
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 3 + 's';
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        container.appendChild(confetti);
+      }
+      
+      // Remove confetti after animation
+      setTimeout(() => {
+        container.innerHTML = '';
+      }, 5000);
+    }
+    
+    // Trigger confetti on page load
+    window.addEventListener('load', createConfetti);
+  </script>
+</body>
+</html>

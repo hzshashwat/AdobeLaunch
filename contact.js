@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const form  = document.getElementById('contactForm');
   const toast = document.getElementById('contactToast');
 
+  // Update cart count from localStorage
+  const cart = JSON.parse(localStorage.getItem('carboncraft_cart') || '[]');
+  const cartCount = cart.reduce((n, i) => n + i.qty, 0);
+  document.getElementById('cart-count').textContent = cartCount;
+
   form.addEventListener('submit', e => {
     e.preventDefault();            // ← remove when you post to a backend
 
@@ -44,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.reset();
   });
 
-  // Add dataLayer push for navigation links in contact.html as well
+  // Add dataLayer push for navigation links
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', (event) => {
       const href = link.getAttribute('href');

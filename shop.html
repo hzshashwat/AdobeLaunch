@@ -12,7 +12,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CarbonCraft | F1 Model Cars</title>
+  <title>Shop | CarbonCraft</title>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,7 +49,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <header class="navbar">
     <a href="index.html" class="brand">CarbonCraft</a>
     <nav>
-      <a href="shop.html"      class="nav-link">Shop</a>
+      <a href="shop.html"      class="nav-link active">Shop</a>
       <a href="about.html"     class="nav-link">About&nbsp;Us</a>
       <a href="contact.html"   class="nav-link">Contact&nbsp;Us</a>
       <a href="#cart"          class="nav-link cart-link">
@@ -59,24 +59,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </nav>
   </header>
 
-  <!-- ▸▸ Hero Banner ◂◂ -->
-  <section id="banner" class="banner">
-    <div class="banner-content">
-      <h1 class="headline">Feel&nbsp;the&nbsp;Speed.</h1>
-      <p class="tagline">Premium Formula-1 scale models for true enthusiasts.</p>
-      <a href="shop.html" class="btn primary banner-btn">Shop&nbsp;Now</a>
+  <!-- ▸▸ Shop Hero ◂◂ -->
+  <section class="shop-hero">
+    <div class="shop-hero-content">
+      <h1 class="headline">The&nbsp;Collection</h1>
+      <p class="tagline">Every legend. Every livery. Every detail.</p>
     </div>
   </section>
 
   <!-- ▸▸ Main ◂◂ -->
   <main>
-    <!-- Featured Products Section -->
-    <section id="featured" class="section">
-      <div class="section-header">
-        <h2 class="section-title">Featured&nbsp;Models</h2>
-        <a href="shop.html" class="view-all-link">View All <i class="fa-solid fa-arrow-right"></i></a>
+    <!-- Shop Section -->
+    <section id="shop" class="section">
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-left">
+          <div class="search-box">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="search-input" placeholder="Search models...">
+          </div>
+          
+          <select id="filter-select" class="filter-select">
+            <option value="all">All Teams</option>
+            <option value="ferrari">Ferrari</option>
+            <option value="mclaren">McLaren</option>
+            <option value="redbull">Red Bull</option>
+            <option value="mercedes">Mercedes</option>
+          </select>
+        </div>
+
+        <div class="filter-right">
+          <select id="sort-select" class="sort-select">
+            <option value="featured">Featured</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="name">Name: A to Z</option>
+          </select>
+        </div>
       </div>
-      <div id="featured-grid" class="product-grid"></div>
+
+      <!-- Products Grid -->
+      <div id="product-grid" class="product-grid"></div>
+      
+      <!-- No Results Message -->
+      <div id="no-results" class="no-results hidden">
+        <i class="fa-solid fa-search"></i>
+        <p>No models match your search.</p>
+      </div>
     </section>
 
     <!-- Cart Section -->
@@ -111,31 +140,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- Scripts -->
   <script src="app.js"></script>
-  <script>
-    // Render featured products for homepage
-    function renderFeaturedProducts() {
-      const featuredGrid = document.getElementById('featured-grid');
-      const featuredProducts = products.slice(0, 5); // Show first 5 products as featured
-      
-      featuredProducts.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.dataset.id = p.id;
-        card.innerHTML = `
-          <img src="${p.images[0]}" alt="${p.name}">
-          <div class="card-body">
-            <h3 class="card-title">${p.name}</h3>
-            <p class="card-price">₹${p.price.toLocaleString()}</p>
-          </div>`;
-        featuredGrid.appendChild(card);
-      });
-    }
-    
-    // Initialize homepage
-    document.addEventListener('DOMContentLoaded', () => {
-      renderFeaturedProducts();
-      updateCartUI();
-    });
-  </script>
+  <script src="shop.js"></script>
 </body>
 </html>

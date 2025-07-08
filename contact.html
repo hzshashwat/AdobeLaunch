@@ -88,26 +88,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- Navbar -->
   <header class="navbar">
-    <div class="brand">CarbonCraft</div>
+    <a href="index.html" class="brand">CarbonCraft</a>
     <nav>
-      <a href="about.html"      class="nav-link">About&nbsp;Us</a>
-      <a href="contact.html"    class="nav-link active">Contact&nbsp;Us</a>
-      <a href="index.html#shop" class="nav-link">Shop</a>
+      <a href="shop.html"      class="nav-link">Shop</a>
+      <a href="about.html"     class="nav-link">About&nbsp;Us</a>
+      <a href="contact.html"   class="nav-link active">Contact&nbsp;Us</a>
       <a href="index.html#cart" class="nav-link cart-link">
         <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-count" class="badge">0</span>
       </a>
     </nav>
   </header>
 
   <!-- Hero -->
   <section class="contact-hero">
-    <h1>Let’s&nbsp;Talk</h1>
+    <h1>Let's&nbsp;Talk</h1>
   </section>
 
   <!-- Contact Form -->
   <section class="section">
     <div class="contact-card">
-      <h2>We’d love your feedback</h2>
+      <h2>We'd love your feedback</h2>
       <form id="contactForm">
         <div class="form-group">
           <label for="name">Name *</label>
@@ -143,7 +144,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="form-group">
           <label for="feedback">Feedback *</label>
-          <textarea id="feedback" name="feedback" placeholder="Tell us what’s on your mind" required></textarea>
+          <textarea id="feedback" name="feedback" placeholder="Tell us what's on your mind" required></textarea>
         </div>
 
         <button type="submit" class="btn primary">Send&nbsp;Message</button>
@@ -155,6 +156,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div id="contactToast" class="toast">Thanks for reaching out! 🏁</div>
 
   <!-- JS -->
+  <script src="app.js"></script>
   <script src="contact.js"></script>
 </body>
 </html>

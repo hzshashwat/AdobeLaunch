@@ -54,16 +54,49 @@ const products = [
       'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/06/L42171-2.webp?fit=1000%2C1000&ssl=1',
       'https://i0.wp.com/mayatoys.in/wp-content/uploads/2024/06/L42171-3.webp?fit=1000%2C1000&ssl=1'
     ]
+  },
+  {
+    id: 'sf23-55',
+    name: 'Ferrari SF-23 #55 Carlos Sainz 1/43',
+    price: 7999,
+    desc: 'Official Ferrari SF-23 Carlos Sainz 1:43 scale model. Detailed cockpit, authentic Santander livery, and display case included.',
+    images: [
+      'https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?auto=format&fit=crop&w=800&q=80'
+    ]
+  },
+  {
+    id: 'amr23-14',
+    name: 'Aston Martin AMR23 #14 Alonso Edition',
+    price: 12500,
+    desc: 'Limited Edition Aston Martin AMR23 Fernando Alonso model. 1:18 scale with working suspension and steering. British Racing Green finish.',
+    images: [
+      'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1542282088-fe8426682b8f?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=800&q=80'
+    ]
+  },
+  {
+    id: 'alpine-a523',
+    name: 'Alpine A523 French GP Special 1/18',
+    price: 16999,
+    desc: 'Alpine A523 French GP special livery. Features unique pink accents, 1:18 scale precision model with opening DRS wing.',
+    images: [
+      'https://images.unsplash.com/photo-1592198084033-aade902d1aae?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1535732820275-9ffd998cac22?auto=format&fit=crop&w=800&q=80'
+    ]
   }
 ];
 
 
 /* ───────── Elements ───────── */
-const productGrid   = document.getElementById('product-grid');
 const cartCount     = document.getElementById('cart-count');
 const cartItemsEl   = document.getElementById('cart-items');
 const cartFooter    = document.getElementById('cart-footer');
 const cartTotalEl   = document.getElementById('cart-total');
+const checkoutBtn   = document.getElementById('checkout-btn');
 
 const modal         = document.getElementById('modal');
 const modalImg      = document.getElementById('modal-img');
@@ -79,46 +112,45 @@ let currentProductId = null;
 let currentIndex = 0;
 let carouselTimer;
 
-/* ───────── Init ───────── */
-renderProducts();
-updateCartUI();
-
-/* ───────── Render Functions ───────── */
-function renderProducts() {
-  products.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    card.dataset.id = p.id;
-    card.innerHTML = `
-      <img src="${p.images[0]}" alt="${p.name}">
-      <div class="card-body">
-        <h3 class="card-title">${p.name}</h3>
-        <p class="card-price">₹${p.price.toLocaleString()}</p>
-      </div>`;
-    productGrid.appendChild(card);
-  });
-}
-
 /* ───────── Cart Helpers ───────── */
 function addToCart(id) {
   const found = cart.find(i => i.id === id);
   found ? found.qty++ : cart.push({ id, qty: 1 });
   persistCart();
+  
+  // Push dataLayer event for add to cart
+  const product = products.find(p => p.id === id);
+  if (window.dataLayer && product) {
+    window.dataLayer.push({
+      event: 'add_to_cart',
+      item_name: product.name,
+      item_id: product.id,
+      price: product.price,
+      quantity: 1
+    });
+  }
 }
+
 function removeFromCart(id) {
   cart = cart.filter(i => i.id !== id);
   persistCart();
 }
+
 function persistCart() {
   localStorage.setItem('carboncraft_cart', JSON.stringify(cart));
   updateCartUI();
 }
+
 function updateCartUI() {
   cartCount.textContent = cart.reduce((n, i) => n + i.qty, 0);
+  
+  if (!cartItemsEl) return; // Exit if cart elements don't exist (shop page)
+  
   cartItemsEl.innerHTML = '';
   if (!cart.length) {
     cartItemsEl.innerHTML = '<p>Your cart is empty.</p>';
-    cartFooter.classList.add('hidden'); return;
+    cartFooter.classList.add('hidden'); 
+    return;
   }
   cartFooter.classList.remove('hidden');
 
@@ -165,10 +197,12 @@ function openModal(id) {
 
   modal.classList.remove('hidden');
 }
+
 function closeModal() {
   modal.classList.add('hidden');
   clearInterval(carouselTimer);
 }
+
 function buildDots(count) {
   carouselDots.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -177,60 +211,110 @@ function buildDots(count) {
     carouselDots.appendChild(btn);
   }
 }
+
 function highlightDot(i) {
   [...carouselDots.children].forEach(d => d.classList.toggle('active', +d.dataset.index === i));
 }
+
 function updateCarouselImage(imgArr) {
   modalImg.src = imgArr[currentIndex];
   highlightDot(currentIndex);
 }
 
+/* ───────── Checkout ───────── */
+function handleCheckout() {
+  if (!cart.length) {
+    alert('Your cart is empty!');
+    return;
+  }
+  
+  // Calculate total for dataLayer
+  const total = cart.reduce((sum, item) => {
+    const product = products.find(p => p.id === item.id);
+    return sum + (product ? product.price * item.qty : 0);
+  }, 0);
+  
+  // Push checkout event to dataLayer
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'begin_checkout',
+      cart_total: total,
+      cart_items: cart.length
+    });
+  }
+  
+  // Redirect to checkout success page
+  window.location.href = 'checkout-success.html';
+}
+
 /* ───────── Event Listeners ───────── */
-productGrid.addEventListener('click', e => {
-  const card = e.target.closest('.product-card');
-  if (card) openModal(card.dataset.id);
-});
+// Only add featured grid listener if it exists (homepage)
+const featuredGrid = document.getElementById('featured-grid');
+if (featuredGrid) {
+  featuredGrid.addEventListener('click', e => {
+    const card = e.target.closest('.product-card');
+    if (card) openModal(card.dataset.id);
+  });
+}
 
-modalAddBtn.addEventListener('click', () => {
-  addToCart(currentProductId);
-  closeModal();
-});
-document.getElementById('modal-close').addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+// Modal events
+if (modalAddBtn) {
+  modalAddBtn.addEventListener('click', () => {
+    addToCart(currentProductId);
+    closeModal();
+  });
+}
 
-carouselDots.addEventListener('click', e => {
-  if (!e.target.dataset.index) return;
-  const p = products.find(x => x.id === currentProductId);
-  if (!p) return;
-  currentIndex = +e.target.dataset.index;
-  updateCarouselImage(p.images);
-  clearInterval(carouselTimer);
-  carouselTimer = setInterval(() => {
-    currentIndex = (currentIndex + 1) % p.images.length;
+if (document.getElementById('modal-close')) {
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+}
+
+if (modal) {
+  modal.addEventListener('click', e => { 
+    if (e.target === modal) closeModal(); 
+  });
+}
+
+// Carousel dots
+if (carouselDots) {
+  carouselDots.addEventListener('click', e => {
+    if (!e.target.dataset.index) return;
+    const p = products.find(x => x.id === currentProductId);
+    if (!p) return;
+    currentIndex = +e.target.dataset.index;
     updateCarouselImage(p.images);
-  }, 4000);
-});
+    clearInterval(carouselTimer);
+    carouselTimer = setInterval(() => {
+      currentIndex = (currentIndex + 1) % p.images.length;
+      updateCarouselImage(p.images);
+    }, 4000);
+  });
+}
 
-cartItemsEl.addEventListener('click', e => {
-  const id = e.target.dataset.remove;
-  if (id) removeFromCart(id);
-});
+// Cart events
+if (cartItemsEl) {
+  cartItemsEl.addEventListener('click', e => {
+    const id = e.target.dataset.remove;
+    if (id) removeFromCart(id);
+  });
+}
 
-/* Home-page tab switcher (Shop ↔ Cart) */
+// Checkout button
+if (checkoutBtn) {
+  checkoutBtn.addEventListener('click', handleCheckout);
+}
+
+// Navigation for cart toggle
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', (event) => {
-    // Prevent default navigation if it's an internal hash link for smooth scrolling
-    // If it's a hash link, prevent default and let the smooth scroll handle it.
-    // If it's a regular page link (e.g., about.html), do not prevent default,
-    // as we want the browser to navigate.
     const href = link.getAttribute('href');
     const isHashLink = href && href.startsWith('#');
 
     if (isHashLink) {
-      event.preventDefault(); // Only prevent default for hash links
+      event.preventDefault();
     }
     
-    // Push a dataLayer event for navigation link clicks
+    // Push dataLayer event
     if (window.dataLayer) {
       window.dataLayer.push({
         event: 'nav_link_click',
@@ -239,9 +323,21 @@ document.querySelectorAll('.nav-link').forEach(link => {
       });
     }
 
-    if (!document.querySelector('main')) return; // ignore on about/contact
-    document.querySelectorAll('main .section').forEach(s => s.classList.add('hidden'));
-    (link.classList.contains('cart-link') ? document.getElementById('cart') : document.getElementById('shop'))
-      .classList.remove('hidden');
+    // Only toggle sections on homepage
+    const mainEl = document.querySelector('main');
+    if (!mainEl || !document.getElementById('featured')) return;
+    
+    if (link.classList.contains('cart-link') && isHashLink) {
+      document.getElementById('featured').classList.add('hidden');
+      document.getElementById('cart').classList.remove('hidden');
+    } else if (href === '#featured' || href === 'index.html') {
+      document.getElementById('cart').classList.add('hidden');
+      document.getElementById('featured').classList.remove('hidden');
+    }
   });
+});
+
+// Initialize cart UI on page load
+document.addEventListener('DOMContentLoaded', () => {
+  updateCartUI();
 });
