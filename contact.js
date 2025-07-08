@@ -52,13 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Add dataLayer push for navigation links
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', (event) => {
-      const href = link.getAttribute('href');
-      const isHashLink = href && href.startsWith('#');
-
-      if (isHashLink) {
-        event.preventDefault(); 
-      }
-
       if (window.dataLayer) {
         window.dataLayer.push({
           event: 'nav_link_click',

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-N4CK39HV');</script>
+<!-- End Google Tag Manager -->
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cart | CarbonCraft</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QVSPDR7CXH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  /*  ▼ add cookie_flags  */
+  gtag('config', 'G-QVSPDR7CXH', {
+    cookie_flags: 'SameSite=None;Secure'
+  });
+</script>
+
+
+<body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N4CK39HV"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <!-- ▸▸ Navbar ◂◂ -->
+  <header class="navbar">
+    <a href="index.html" class="brand">CarbonCraft</a>
+    <nav>
+      <a href="shop.html"      class="nav-link">Shop</a>
+      <a href="about.html"     class="nav-link">About&nbsp;Us</a>
+      <a href="contact.html"   class="nav-link">Contact&nbsp;Us</a>
+      <a href="cart.html"      class="nav-link cart-link active">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-count" class="badge">0</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- ▸▸ Cart Hero ◂◂ -->
+  <section class="cart-hero">
+    <div class="cart-hero-content">
+      <h1 class="headline">Your&nbsp;Cart</h1>
+      <p class="tagline">Review your selection before checkout</p>
+    </div>
+  </section>
+
+  <!-- ▸▸ Main ◂◂ -->
+  <main>
+    <section class="section">
+      <div class="cart-container">
+        <div id="cart-empty" class="cart-empty hidden">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <h2>Your cart is empty</h2>
+          <p>Looks like you haven't added any models yet.</p>
+          <a href="shop.html" class="btn primary">Start Shopping</a>
+        </div>
+        
+        <div id="cart-content" class="cart-content hidden">
+          <div id="cart-items" class="cart-items"></div>
+          
+          <div class="cart-summary">
+            <h3>Order Summary</h3>
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span id="cart-subtotal">₹0</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span>Free</span>
+            </div>
+            <div class="summary-row total-row">
+              <span>Total</span>
+              <span id="cart-total">₹0</span>
+            </div>
+            <button id="checkout-btn" class="btn primary checkout-btn">Proceed to Checkout</button>
+            <a href="shop.html" class="continue-shopping">Continue Shopping</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ▸▸ Product Modal ◂◂ -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close">&times;</button>
+
+      <div class="modal-gallery">
+        <img id="modal-img" src="" alt="Product image">
+        <div id="carousel-dots" class="carousel-dots"></div>
+      </div>
+
+      <div class="modal-info">
+        <h3 id="modal-title"></h3>
+        <p id="modal-desc"></p>
+        <div id="modal-price" class="price"></div>
+        <button id="modal-add-btn" class="btn primary">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+  <script>
+    // Wait for app.js to load products
+    window.addEventListener('load', () => {
+      // Ensure products are loaded
+      if (typeof products === 'undefined') {
+        console.error('Products array not found');
+        return;
+      }
+      
+      // Initialize cart page
+      updateCartPageUI();
+      
+      // Handle checkout button
+      const checkoutBtn = document.getElementById('checkout-btn');
+      if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', handleCheckout);
+      }
+      
+      // Handle cart item removal and quantity adjustment
+      const cartItemsEl = document.getElementById('cart-items');
+      if (cartItemsEl) {
+        cartItemsEl.addEventListener('click', e => {
+          // Handle remove button (click on button or icon)
+          const removeBtn = e.target.closest('[data-remove]');
+          if (removeBtn) {
+            const id = removeBtn.dataset.remove;
+            const cartItem = removeBtn.closest('.cart-item');
+            
+            // Add animation class
+            cartItem.classList.add('removing');
+            
+            // Wait for animation then remove
+            setTimeout(() => {
+              let cart = JSON.parse(localStorage.getItem('carboncraft_cart') || '[]');
+              cart = cart.filter(i => i.id !== id);
+              localStorage.setItem('carboncraft_cart', JSON.stringify(cart));
+              updateCartPageUI();
+            }, 300);
+          }
+          
+          // Handle quantity adjustment
+          const qtyBtn = e.target.closest('[data-action]');
+          if (qtyBtn) {
+            const action = qtyBtn.dataset.action;
+            const id = qtyBtn.dataset.id;
+            let cart = JSON.parse(localStorage.getItem('carboncraft_cart') || '[]');
+            const item = cart.find(i => i.id === id);
+            
+            if (item) {
+              if (action === 'increase') {
+                item.qty++;
+              } else if (action === 'decrease' && item.qty > 1) {
+                item.qty--;
+              }
+              localStorage.setItem('carboncraft_cart', JSON.stringify(cart));
+              updateCartPageUI();
+            }
+          }
+        });
+      }
+      
+      function updateCartPageUI() {
+        const cart = JSON.parse(localStorage.getItem('carboncraft_cart') || '[]');
+        const cartEmpty = document.getElementById('cart-empty');
+        const cartContent = document.getElementById('cart-content');
+        const cartItemsEl = document.getElementById('cart-items');
+        
+        console.log('Cart contents:', cart); // Debug
+        
+        if (cart.length === 0) {
+          cartEmpty.classList.remove('hidden');
+          cartContent.classList.add('hidden');
+        } else {
+          cartEmpty.classList.add('hidden');
+          cartContent.classList.remove('hidden');
+          
+          // Render cart items
+          cartItemsEl.innerHTML = '';
+          let total = 0;
+          
+          cart.forEach(item => {
+            const p = products.find(x => x.id === item.id);
+            if (!p) {
+              console.error('Product not found:', item.id);
+              return;
+            }
+            
+            total += p.price * item.qty;
+            const row = document.createElement('div');
+            row.className = 'cart-item';
+            row.innerHTML = `
+              <img src="${p.images[0]}" alt="${p.name}">
+              <div class="cart-item-info">
+                <h3>${p.name}</h3>
+                <p class="unit-price">₹${p.price.toLocaleString()} each</p>
+                <div class="quantity-controls">
+                  <button class="qty-btn" data-action="decrease" data-id="${p.id}">−</button>
+                  <span class="qty-display">${item.qty}</span>
+                  <button class="qty-btn" data-action="increase" data-id="${p.id}">+</button>
+                </div>
+                <p class="card-price">₹${(p.price * item.qty).toLocaleString()}</p>
+              </div>
+              <button class="remove-btn" data-remove="${p.id}" title="Remove from cart">
+                <i class="fa-solid fa-trash"></i>
+              </button>`;
+            cartItemsEl.appendChild(row);
+          });
+          
+          // Update totals
+          const subtotalEl = document.getElementById('cart-subtotal');
+          const totalEl = document.getElementById('cart-total');
+          if (subtotalEl) {
+            subtotalEl.textContent = `₹${total.toLocaleString()}`;
+          }
+          if (totalEl) {
+            totalEl.textContent = `₹${total.toLocaleString()}`;
+          }
+          
+          // Update cart count
+          const cartCount = cart.reduce((n, i) => n + i.qty, 0);
+          document.getElementById('cart-count').textContent = cartCount;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -262,6 +262,21 @@ if (modalAddBtn) {
   modalAddBtn.addEventListener('click', () => {
     addToCart(currentProductId);
     closeModal();
+    
+    // Show a brief notification
+    const notification = document.createElement('div');
+    notification.className = 'add-to-cart-notification';
+    notification.textContent = 'Added to cart!';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => notification.remove(), 300);
+    }, 2000);
   });
 }
 
@@ -304,16 +319,9 @@ if (checkoutBtn) {
   checkoutBtn.addEventListener('click', handleCheckout);
 }
 
-// Navigation for cart toggle
+// Navigation for dataLayer tracking only
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', (event) => {
-    const href = link.getAttribute('href');
-    const isHashLink = href && href.startsWith('#');
-
-    if (isHashLink) {
-      event.preventDefault();
-    }
-    
     // Push dataLayer event
     if (window.dataLayer) {
       window.dataLayer.push({
@@ -321,18 +329,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
         link_text: link.textContent.trim(),
         link_url: link.href
       });
-    }
-
-    // Only toggle sections on homepage
-    const mainEl = document.querySelector('main');
-    if (!mainEl || !document.getElementById('featured')) return;
-    
-    if (link.classList.contains('cart-link') && isHashLink) {
-      document.getElementById('featured').classList.add('hidden');
-      document.getElementById('cart').classList.remove('hidden');
-    } else if (href === '#featured' || href === 'index.html') {
-      document.getElementById('cart').classList.add('hidden');
-      document.getElementById('featured').classList.remove('hidden');
     }
   });
 });
