@@ -2,58 +2,54 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    types: [ opened, synchronize, reopened, closed ]
-    branches: [ main ]
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
 
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
+    name: Build and Deploy Job
     permissions:
       id-token: write
       contents: read
-
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
           lfs: false
 
-      - name: Install OIDC Client from Core Package
-        run: npm install @actions/core@1.6.0 @actions/http-client
-
       - name: Get Id Token
-        id: idtoken
         uses: actions/github-script@v6
+        id: idtoken
         with:
           script: |
             return await core.getIDToken();
           result-encoding: string
 
-      - name: Build and Deploy
+      - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
-          # Leave this blank or supply the real secret when you’re ready to deploy
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ICY_GRASS_029847B10 }}
-          action: upload
-          app_location: "/"
-          api_location: ""
-          output_location: "."
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_NICE_DUNE_046EB4910 }}
+          action: "upload"
+          app_location: "/"              # HTML/CSS/JS root
+          api_location: ""               # No API
+          output_location: ""            # No build folder
+          app_build_command: ""          # Skip build step
           github_id_token: ${{ steps.idtoken.outputs.result }}
-        env:
-          SKIP_DEPLOY_ON_MISSING_SECRETS: true   # <-- THIS is what makes the step skip instead of fail
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
+    name: Close Pull Request Job
     steps:
       - name: Close Pull Request
         id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
-          action: close
-        env:
-          SKIP_DEPLOY_ON_MISSING_SECRETS: true
+          action: "close"
