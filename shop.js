@@ -1,4 +1,4 @@
-/* shop.js - Handles shop page functionality */
+/* shop.js - Handles shop page functionality with Adobe Launch tracking */
 
 // Wait for DOM and products to be available
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,11 +21,36 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (p.name.toLowerCase().includes('mclaren')) team = 'mclaren';
     else if (p.name.toLowerCase().includes('red bull')) team = 'redbull';
     else if (p.name.toLowerCase().includes('mercedes')) team = 'mercedes';
+    else if (p.name.toLowerCase().includes('aston martin')) team = 'astonmartin';
+    else if (p.name.toLowerCase().includes('alpine')) team = 'alpine';
     return { ...p, team };
   });
 
   // State
   let filteredProducts = [...productsWithTeams];
+
+  // Track product impressions on page load
+  function trackProductImpressions() {
+    if (window.dataLayer && filteredProducts.length > 0) {
+      const impressions = filteredProducts.slice(0, 20).map((p, index) => ({
+        'id': p.id,
+        'name': p.name,
+        'category': 'F1 Model Cars',
+        'brand': p.name.split(' ')[0],
+        'price': p.price,
+        'position': index + 1,
+        'list': 'Shop Page'
+      }));
+
+      window.dataLayer.push({ ecommerce: null });
+      window.dataLayer.push({
+        'event': 'product_impressions',
+        'ecommerce': {
+          'impressions': impressions
+        }
+      });
+    }
+  }
 
   // Render filtered products
   function renderFilteredProducts() {
@@ -39,10 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     noResults.classList.add('hidden');
     
-    filteredProducts.forEach(p => {
+    filteredProducts.forEach((p, index) => {
       const card = document.createElement('div');
       card.className = 'product-card';
       card.dataset.id = p.id;
+      card.dataset.position = index + 1;
       card.innerHTML = `
         <img src="${p.images[0]}" alt="${p.name}">
         <div class="card-body">
@@ -51,6 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>`;
       grid.appendChild(card);
     });
+
+    // Track impressions after rendering
+    trackProductImpressions();
   }
 
   // Filter and sort products
@@ -92,16 +121,106 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFilteredProducts();
   }
 
-  // Event listeners
-  searchInput.addEventListener('input', filterAndSortProducts);
-  filterSelect.addEventListener('change', filterAndSortProducts);
-  sortSelect.addEventListener('change', filterAndSortProducts);
+  // Search tracking with debounce
+  let searchTimer;
+  searchInput.addEventListener('input', (e) => {
+    // First apply the filter
+    filterAndSortProducts();
+    
+    // Then track the search
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      if (e.target.value.length > 2) { // Only track searches with 3+ characters
+        if (window.dataLayer) {
+          window.dataLayer.push({
+            'event': 'site_search',
+            'search': {
+              'term': e.target.value,
+              'results': filteredProducts.length,
+              'page': 'shop'
+            }
+          });
+        }
+      }
+    }, 1000); // Wait 1 second after user stops typing
+  });
 
-  // Handle product clicks
+  // Filter tracking
+  filterSelect.addEventListener('change', (e) => {
+    filterAndSortProducts();
+    
+    if (window.dataLayer) {
+      window.dataLayer.push({
+        'event': 'filter_products',
+        'filter': {
+          'type': 'team',
+          'value': e.target.value,
+          'results': filteredProducts.length
+        }
+      });
+    }
+  });
+
+  // Sort tracking
+  sortSelect.addEventListener('change', (e) => {
+    filterAndSortProducts();
+    
+    if (window.dataLayer) {
+      window.dataLayer.push({
+        'event': 'sort_products',
+        'sort': {
+          'method': e.target.value,
+          'results': filteredProducts.length
+        }
+      });
+    }
+  });
+
+  // Handle product clicks with enhanced tracking
   document.getElementById('product-grid').addEventListener('click', e => {
     const card = e.target.closest('.product-card');
     if (card) {
-      openModal(card.dataset.id);
+      const productId = card.dataset.id;
+      const position = card.dataset.position;
+      const product = productsWithTeams.find(p => p.id === productId);
+      
+      // Track product click
+      if (window.dataLayer && product) {
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({
+          'event': 'product_click',
+          'ecommerce': {
+            'click': {
+              'actionField': {'list': 'Shop Page'},
+              'products': [{
+                'id': product.id,
+                'name': product.name,
+                'category': 'F1 Model Cars',
+                'brand': product.name.split(' ')[0],
+                'price': product.price,
+                'position': parseInt(position)
+              }]
+            }
+          }
+        });
+      }
+      
+      // Open modal (from app.js)
+      openModal(productId);
+    }
+  });
+
+  // Track page timing
+  window.addEventListener('load', () => {
+    if (window.dataLayer && window.performance) {
+      const loadTime = Math.round(performance.now());
+      window.dataLayer.push({
+        'event': 'page_timing',
+        'timing': {
+          'page': 'shop',
+          'loadTime': loadTime
+        }
+      });
     }
   });
 

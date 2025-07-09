@@ -6,6 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Order Confirmed | CarbonCraft</title>
 
+  <!-- Data Layer Initialization - Add BEFORE other scripts -->
+  <script>
+    // Initialize dataLayer
+    window.dataLayer = window.dataLayer || [];
+    
+    // Push page information
+    dataLayer.push({
+      'event': 'pageview',
+      'page': {
+        'name': 'Order Confirmation',
+        'type': 'confirmation',
+        'url': window.location.href,
+        'path': window.location.pathname,
+        'title': document.title
+      }
+    });
+  </script>
+
+  <!-- Adobe Launch Script -->
+  <script src="https://assets.adobedtm.com/236ca7d75265/1a332fef7a44/launch-41b0e3aa4cd4-development.min.js" async></script>
+
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,8 +90,74 @@
     const orderNum = 'CC' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9999).toString().padStart(4, '0');
     document.getElementById('order-number').textContent = orderNum;
 
-    // Clear cart after successful checkout
+    // Get cart data before clearing
+    const lastCartData = sessionStorage.getItem('last_cart_for_tracking');
+    const lastCartTotal = sessionStorage.getItem('last_cart_total');
+
+    // Enhanced purchase tracking
+    if (window.dataLayer) {
+      // Track page view as confirmation
+      window.dataLayer.push({
+        'event': 'order_confirmation_view',
+        'order': {
+          'id': orderNum,
+          'status': 'confirmed'
+        }
+      });
+      
+      // Purchase event with details
+      if (lastCartData && lastCartTotal) {
+        const purchaseItems = JSON.parse(lastCartData);
+        
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({
+          'event': 'purchase',
+          'ecommerce': {
+            'purchase': {
+              'actionField': {
+                'id': orderNum,
+                'affiliation': 'CarbonCraft Online Store',
+                'revenue': lastCartTotal,
+                'tax': 0,
+                'shipping': 0,
+                'coupon': ''
+              },
+              'products': purchaseItems
+            },
+            'value': lastCartTotal,
+            'currency': 'INR'
+          }
+        });
+        
+        // Track conversion
+        window.dataLayer.push({
+          'event': 'conversion',
+          'conversion': {
+            'type': 'purchase',
+            'value': lastCartTotal,
+            'orderId': orderNum
+          }
+        });
+      } else {
+        // Fallback if cart data is not available
+        window.dataLayer.push({
+          'event': 'purchase',
+          'ecommerce': {
+            'purchase': {
+              'actionField': {
+                'id': orderNum,
+                'affiliation': 'CarbonCraft Online Store'
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Clear cart and session storage
     localStorage.removeItem('carboncraft_cart');
+    sessionStorage.removeItem('last_cart_for_tracking');
+    sessionStorage.removeItem('last_cart_total');
     
     // Update cart count
     document.getElementById('cart-count').textContent = '0';
@@ -97,7 +184,47 @@
     }
     
     // Trigger confetti on page load
-    window.addEventListener('load', createConfetti);
+    window.addEventListener('load', () => {
+      createConfetti();
+      
+      // Track successful checkout completion timing
+      if (window.dataLayer && window.performance) {
+        const loadTime = Math.round(performance.now());
+        window.dataLayer.push({
+          'event': 'checkout_complete_timing',
+          'timing': {
+            'page': 'checkout_success',
+            'loadTime': loadTime
+          }
+        });
+      }
+    });
+
+    // Track "Continue Shopping" button click
+    document.querySelector('.success-actions .btn.primary').addEventListener('click', () => {
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          'event': 'post_purchase_action',
+          'action': {
+            'type': 'continue_shopping',
+            'orderId': orderNum
+          }
+        });
+      }
+    });
+
+    // Track "Back to Home" button click
+    document.querySelector('.success-actions .btn.secondary').addEventListener('click', () => {
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          'event': 'post_purchase_action',
+          'action': {
+            'type': 'back_to_home',
+            'orderId': orderNum
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>

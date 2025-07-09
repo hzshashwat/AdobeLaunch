@@ -2,10 +2,30 @@
 <html lang="en">
 <head>
 
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cart | CarbonCraft</title>
+
+  <!-- Data Layer Initialization - Add BEFORE other scripts -->
+  <script>
+    // Initialize dataLayer
+    window.dataLayer = window.dataLayer || [];
+    
+    // Push page information
+    dataLayer.push({
+      'event': 'pageview',
+      'page': {
+        'name': 'Cart',
+        'type': 'cart',
+        'url': window.location.href,
+        'path': window.location.pathname,
+        'title': document.title
+      }
+    });
+  </script>
+
+  <!-- Adobe Launch Script -->
+  <script src="https://assets.adobedtm.com/236ca7d75265/1a332fef7a44/launch-41b0e3aa4cd4-development.min.js" async></script>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -99,130 +119,6 @@
 
   <!-- Scripts -->
   <script src="app.js"></script>
-  <script>
-    // Wait for app.js to load products
-    window.addEventListener('load', () => {
-      // Ensure products are loaded
-      if (typeof products === 'undefined') {
-        console.error('Products array not found');
-        return;
-      }
-      
-      // Initialize cart page
-      updateCartPageUI();
-      
-      // Handle checkout button
-      const checkoutBtn = document.getElementById('checkout-btn');
-      if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', handleCheckout);
-      }
-      
-      // Handle cart item removal and quantity adjustment
-      const cartItemsEl = document.getElementById('cart-items');
-      if (cartItemsEl) {
-        cartItemsEl.addEventListener('click', e => {
-          // Handle remove button (click on button or icon)
-          const removeBtn = e.target.closest('[data-remove]');
-          if (removeBtn) {
-            const id = removeBtn.dataset.remove;
-            const cartItem = removeBtn.closest('.cart-item');
-            
-            // Add animation class
-            cartItem.classList.add('removing');
-            
-            // Wait for animation then remove
-            setTimeout(() => {
-              let cart = JSON.parse(localStorage.getItem('carboncraft_cart') || '[]');
-              cart = cart.filter(i => i.id !== id);
-              localStorage.setItem('carboncraft_cart', JSON.stringify(cart));
-              updateCartPageUI();
-            }, 300);
-          }
-          
-          // Handle quantity adjustment
-          const qtyBtn = e.target.closest('[data-action]');
-          if (qtyBtn) {
-            const action = qtyBtn.dataset.action;
-            const id = qtyBtn.dataset.id;
-            let cart = JSON.parse(localStorage.getItem('carboncraft_cart') || '[]');
-            const item = cart.find(i => i.id === id);
-            
-            if (item) {
-              if (action === 'increase') {
-                item.qty++;
-              } else if (action === 'decrease' && item.qty > 1) {
-                item.qty--;
-              }
-              localStorage.setItem('carboncraft_cart', JSON.stringify(cart));
-              updateCartPageUI();
-            }
-          }
-        });
-      }
-      
-      function updateCartPageUI() {
-        const cart = JSON.parse(localStorage.getItem('carboncraft_cart') || '[]');
-        const cartEmpty = document.getElementById('cart-empty');
-        const cartContent = document.getElementById('cart-content');
-        const cartItemsEl = document.getElementById('cart-items');
-        
-        console.log('Cart contents:', cart); // Debug
-        
-        if (cart.length === 0) {
-          cartEmpty.classList.remove('hidden');
-          cartContent.classList.add('hidden');
-        } else {
-          cartEmpty.classList.add('hidden');
-          cartContent.classList.remove('hidden');
-          
-          // Render cart items
-          cartItemsEl.innerHTML = '';
-          let total = 0;
-          
-          cart.forEach(item => {
-            const p = products.find(x => x.id === item.id);
-            if (!p) {
-              console.error('Product not found:', item.id);
-              return;
-            }
-            
-            total += p.price * item.qty;
-            const row = document.createElement('div');
-            row.className = 'cart-item';
-            row.innerHTML = `
-              <img src="${p.images[0]}" alt="${p.name}">
-              <div class="cart-item-info">
-                <h3>${p.name}</h3>
-                <p class="unit-price">₹${p.price.toLocaleString()} each</p>
-                <div class="quantity-controls">
-                  <button class="qty-btn" data-action="decrease" data-id="${p.id}">−</button>
-                  <span class="qty-display">${item.qty}</span>
-                  <button class="qty-btn" data-action="increase" data-id="${p.id}">+</button>
-                </div>
-                <p class="card-price">₹${(p.price * item.qty).toLocaleString()}</p>
-              </div>
-              <button class="remove-btn" data-remove="${p.id}" title="Remove from cart">
-                <i class="fa-solid fa-trash"></i>
-              </button>`;
-            cartItemsEl.appendChild(row);
-          });
-          
-          // Update totals
-          const subtotalEl = document.getElementById('cart-subtotal');
-          const totalEl = document.getElementById('cart-total');
-          if (subtotalEl) {
-            subtotalEl.textContent = `₹${total.toLocaleString()}`;
-          }
-          if (totalEl) {
-            totalEl.textContent = `₹${total.toLocaleString()}`;
-          }
-          
-          // Update cart count
-          const cartCount = cart.reduce((n, i) => n + i.qty, 0);
-          document.getElementById('cart-count').textContent = cartCount;
-        }
-      }
-    });
-  </script>
+  <script src="cart.js"></script>
 </body>
 </html>

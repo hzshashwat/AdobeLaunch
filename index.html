@@ -6,6 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CarbonCraft | F1 Model Cars</title>
 
+  <!-- Data Layer Initialization - Add BEFORE other scripts -->
+  <script>
+    // Initialize dataLayer
+    window.dataLayer = window.dataLayer || [];
+    
+    // Push page information
+    dataLayer.push({
+      'event': 'pageview',
+      'page': {
+        'name': 'Home',
+        'type': 'homepage',
+        'url': window.location.href,
+        'path': window.location.pathname,
+        'title': document.title
+      }
+    });
+  </script>
+
+  <!-- Adobe Launch Script -->
+  <script src="https://assets.adobedtm.com/236ca7d75265/1a332fef7a44/launch-41b0e3aa4cd4-development.min.js" async></script>
+
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -118,20 +118,54 @@ function addToCart(id) {
   found ? found.qty++ : cart.push({ id, qty: 1 });
   persistCart();
   
-  // Push dataLayer event for add to cart
+  // Enhanced dataLayer event for add to cart
   const product = products.find(p => p.id === id);
   if (window.dataLayer && product) {
+    window.dataLayer.push({ ecommerce: null }); // Clear previous ecommerce data
     window.dataLayer.push({
       event: 'add_to_cart',
-      item_name: product.name,
-      item_id: product.id,
-      price: product.price,
-      quantity: 1
+      ecommerce: {
+        'add': {
+          'products': [{
+            'id': product.id,
+            'name': product.name,
+            'price': product.price,
+            'quantity': 1,
+            'category': 'F1 Model Cars',
+            'brand': product.name.split(' ')[0]
+          }]
+        },
+        'value': product.price,
+        'currency': 'INR'
+      }
     });
   }
 }
 
 function removeFromCart(id) {
+  // Get product and cart item info before removal
+  const product = products.find(p => p.id === id);
+  const item = cart.find(i => i.id === id);
+  
+  // Track removal
+  if (window.dataLayer && product && item) {
+    window.dataLayer.push({ ecommerce: null });
+    window.dataLayer.push({
+      'event': 'remove_from_cart',
+      'ecommerce': {
+        'remove': {
+          'products': [{
+            'id': product.id,
+            'name': product.name,
+            'price': product.price,
+            'quantity': item.qty,
+            'category': 'F1 Model Cars'
+          }]
+        }
+      }
+    });
+  }
+  
   cart = cart.filter(i => i.id !== id);
   persistCart();
 }
@@ -186,6 +220,29 @@ function openModal(id) {
   modalPrice.textContent = `₹${p.price.toLocaleString()}`;
   modalImg.src = p.images[currentIndex];
 
+  // Add product view tracking
+  if (window.dataLayer) {
+    window.dataLayer.push({ ecommerce: null }); // Clear previous ecommerce data
+    window.dataLayer.push({
+      'event': 'product_view',
+      'ecommerce': {
+        'detail': {
+          'products': [{
+            'id': p.id,
+            'name': p.name,
+            'price': p.price,
+            'category': 'F1 Model Cars',
+            'brand': p.name.split(' ')[0], // Extract brand from name
+            'variant': p.name.includes('1/18') ? '1:18 Scale' : 
+                      p.name.includes('1/24') ? '1:24 Scale' : 
+                      p.name.includes('1/43') ? '1:43 Scale' : 
+                      p.name.includes('1/8') ? '1:8 Scale' : 'Other'
+          }]
+        }
+      }
+    });
+  }
+
   buildDots(p.images.length);
   highlightDot(currentIndex);
 
@@ -228,18 +285,41 @@ function handleCheckout() {
     return;
   }
   
-  // Calculate total for dataLayer
-  const total = cart.reduce((sum, item) => {
-    const product = products.find(p => p.id === item.id);
-    return sum + (product ? product.price * item.qty : 0);
-  }, 0);
+  // Calculate total and prepare products array
+  const checkoutProducts = [];
+  let total = 0;
   
-  // Push checkout event to dataLayer
+  cart.forEach(item => {
+    const product = products.find(p => p.id === item.id);
+    if (product) {
+      total += product.price * item.qty;
+      checkoutProducts.push({
+        'id': product.id,
+        'name': product.name,
+        'price': product.price,
+        'quantity': item.qty,
+        'category': 'F1 Model Cars'
+      });
+    }
+  });
+  
+  // Store cart data for purchase tracking
+  sessionStorage.setItem('last_cart_for_tracking', JSON.stringify(checkoutProducts));
+  sessionStorage.setItem('last_cart_total', total);
+  
+  // Push enhanced checkout event
   if (window.dataLayer) {
+    window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({
-      event: 'begin_checkout',
-      cart_total: total,
-      cart_items: cart.length
+      'event': 'begin_checkout',
+      'ecommerce': {
+        'checkout': {
+          'actionField': {'step': 1},
+          'products': checkoutProducts
+        },
+        'value': total,
+        'currency': 'INR'
+      }
     });
   }
   
@@ -319,15 +399,18 @@ if (checkoutBtn) {
   checkoutBtn.addEventListener('click', handleCheckout);
 }
 
-// Navigation for dataLayer tracking only
+// Navigation tracking for dataLayer
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', (event) => {
     // Push dataLayer event
     if (window.dataLayer) {
       window.dataLayer.push({
-        event: 'nav_link_click',
-        link_text: link.textContent.trim(),
-        link_url: link.href
+        event: 'navigation_click',
+        navigation: {
+          'text': link.textContent.trim(),
+          'url': link.href,
+          'type': 'header'
+        }
       });
     }
   });
